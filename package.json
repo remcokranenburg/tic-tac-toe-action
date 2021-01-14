@@ -20,5 +20,9 @@
   "bugs": {
     "url": "https://github.com/remcokranenburg/tic-tac-toe-action/issues"
   },
-  "homepage": "https://github.com/remcokranenburg/tic-tac-toe-action#readme"
+  "homepage": "https://github.com/remcokranenburg/tic-tac-toe-action#readme",
+  "dependencies": {
+    "@actions/core": "^1.2.6",
+    "@actions/github": "^4.0.0"
+  }
 }
