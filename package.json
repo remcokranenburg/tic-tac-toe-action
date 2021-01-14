@@ -1,0 +1,24 @@
+{
+  "name": "tic-tac-toe-action",
+  "version": "0.1.0",
+  "description": "Tic Tac Toe in your issue tracker!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/remcokranenburg/tic-tac-toe-action.git"
+  },
+  "keywords": [
+    "game",
+    "nonsense",
+    "actions-are-cool"
+  ],
+  "author": "Jeroen Rietveld, Remco Kranenburg",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/remcokranenburg/tic-tac-toe-action/issues"
+  },
+  "homepage": "https://github.com/remcokranenburg/tic-tac-toe-action#readme"
+}
