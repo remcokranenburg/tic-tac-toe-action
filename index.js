@@ -1,5 +1,5 @@
-import * as core from @actions/core;
-import * as github from @actions/github;
+const core = require("@actions/core");
+const github = require("@actions/github");
 
 try {
   console.log("Hello, player! I predict your move is going to be A1!");
