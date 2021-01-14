@@ -15,7 +15,7 @@ async function run() {
 
     const payload = github.context.payload;
     const body = payload.comment.body;
-    const owner = payload.owner.id;
+    const owner = payload.repository.owner.id;
     const repo = payload.repository.id;
     const issue_number = payload.issue.number;
 
