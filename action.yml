@@ -1,0 +1,11 @@
+name: Tic Tac Toe
+description: Let's play some Tic Tac Toe :D
+inputs:
+  move:
+    description: Your move
+    required: true
+    default: "Tic: A1"
+runs:
+  using: 'node12'
+  main: 'index.js'
+
