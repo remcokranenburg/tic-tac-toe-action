@@ -11,8 +11,6 @@ const github = __nccwpck_require__(438);
 async function run() {
   try {
     const token = core.getInput("token");
-
-
     console.log("I know your secret!")
 
     console.log("Payload:")
@@ -22,26 +20,24 @@ async function run() {
     const body = payload.comment.body;
     const owner = payload.repository.owner.id;
     const repo = payload.repository.id;
-    const issue_number = payload.issue.number;
-
+    const issueNumber = payload.issue.number;
     console.log("Unpacked payload")
 
     const octokit = github.getOctokit(token);
-
-    console.log("Get octokit")
+    console.log("Got octokit")
 
     // TODO: calculate best counter move
 
-    const { data: comment } = await octokit.issues.createComment({
+    const comment = `Your move is ${body}`;
+    console.log("Create comment:", owner, repo, issueNumber, comment)
+
+    await octokit.issues.createComment({
       owner: owner,
       repo: repo,
-      issue_number: issue_number,
+      issue_number: issueNumber,
       body: `Your move is: ${body}`,
     });
-
-    console.log("Post comment");
-
-    console.log(comment);
+    console.log("Posted comment");
   } catch(error) {
     core.setFailed(error.message);
   }
