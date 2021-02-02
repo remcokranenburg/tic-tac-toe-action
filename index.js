@@ -11,8 +11,8 @@ async function run() {
 
     const payload = github.context.payload;
     const body = payload.comment.body;
-    const owner = payload.repository.owner.id;
-    const repo = payload.repository.id;
+    const owner = payload.repository.owner.login;
+    const repo = payload.repository.name;
     const issueNumber = payload.issue.number;
     console.log("Unpacked payload")
 
