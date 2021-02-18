@@ -55,21 +55,26 @@ async function run() {
 
       // reconstruct game session
       const game = new Game();
-      moves.forEach((c) => game.makeMove(c.body));
 
-      if(game.isGameOver()) {
-        await poster.post("Error: game is already over!");
-      } else {
+      try {
+        moves.forEach((c) => game.makeMove(c.body));
+      } catch(error) {
+        await poster.post(error.message);
+        throw error;
+      }
+
+      if(!game.isGameOver()) {
         const counterMove = game.calculateBestMove();
         game.makeMove(counterMove);
         await poster.post(counterMove);
-
-        if(game.isGameOver()) {
-          await poster.post("Game over!");
-        }
-
-        await poster.post("```\n" + game.toString() + "\n```");
       }
+
+      if(game.isGameOver()) {
+        const winner = game.numMoves() % 2 == 0 ? "O" : "X";
+        await poster.post(`Game over, ${winner} won!`);
+      }
+
+      await poster.post("```\n" + game.toString() + "\n```");
     }
   } catch(error) {
     core.setFailed(error.message);
