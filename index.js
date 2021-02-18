@@ -1,36 +1,62 @@
 const core = require("@actions/core");
 const github = require("@actions/github");
 
+import { Game } from "./tictactoe.js";
+
+const MOVE_COMMENT_PATTERN = /[A-C][1-3]/;
+
+async function post(owner, repo, issuNumber, comment) {
+  return await octokit.issues.createComment({
+      owner: owner,
+      repo: repo,
+      issue_number: issueNumber,
+      body: comment,
+  });
+}
+
 async function run() {
   try {
     const token = core.getInput("token");
-    console.log("I know your secret!")
 
-    console.log("Payload:")
-    console.log(JSON.stringify(github.context.payload, null, 2))
+    console.log("Payload:");
+    console.log(JSON.stringify(github.context.payload, null, 2));
 
     const payload = github.context.payload;
     const body = payload.comment.body;
     const owner = payload.repository.owner.login;
     const repo = payload.repository.name;
     const issueNumber = payload.issue.number;
-    console.log("Unpacked payload")
 
-    const octokit = github.getOctokit(token);
-    console.log("Got octokit")
+    if(body.match(MOVE_COMMENT_PATTERN)) {
+      let response = "";
 
-    // TODO: calculate best counter move
+      const octokit = github.getOctokit(token);
+      const comments = octokit.request(
+          "GET /repos/{owner}/{repo}/issues/{issue_number}/comments", {
+            owner: owner,
+            repo: repo,
+            issue_number: issueNumber,
+          });
+      const moves = comments.filter((c) => c.body.match(MOVE_COMMENT_PATTERN));
 
-    const comment = `Your move is ${body}`;
-    console.log("Create comment:", owner, repo, issueNumber, comment)
+      // reconstruct game session
+      const game = new Game();
+      moves.forEach((c) => game.makeMove(c.body));
 
-    await octokit.issues.createComment({
-      owner: owner,
-      repo: repo,
-      issue_number: issueNumber,
-      body: `Your move is: ${body}`,
-    });
-    console.log("Posted comment");
+      if(game.isGameOver()) {
+        await post(owner, repo, issueNumber, "Error: game is already over!");
+      } else {
+        const counterMove = game.calculateBestMove();
+        game.makeMove(counterMove);
+        await post(owner, repo, issueNumber, counterMove);
+
+        if(game.isGameOver()) {
+          await post(owner, repo, issueNumber, "Game over!");
+        }
+
+        await post(owner, repo, issueNumber, game.toString());
+      }
+    }
   } catch(error) {
     core.setFailed(error.message);
   }
