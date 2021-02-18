@@ -7,4 +7,4 @@ COPY . /opt/tic-tac-toe
 
 WORKDIR /opt/tic-tac-toe
 
-ENTRYPOINT node index.js
+ENTRYPOINT node /opt/tic-tac-toe/index.js
