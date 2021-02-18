@@ -68,7 +68,7 @@ async function run() {
           await poster.post("Game over!");
         }
 
-        await poster.post(game.toString());
+        await poster.post("```\n" + game.toString() + "\n```");
       }
     }
   } catch(error) {
