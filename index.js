@@ -28,15 +28,12 @@ async function run() {
       let response = "";
 
       const octokit = github.getOctokit(token);
-      const comments = octokit.request(
+      const comments = await octokit.request(
           "GET /repos/{owner}/{repo}/issues/{issue_number}/comments", {
             owner: owner,
             repo: repo,
             issue_number: issueNumber,
           });
-
-      console.log("Comments:")
-      console.log(comments);
 
       const moves = comments.filter((c) => c.body.match(MOVE_COMMENT_PATTERN));
 
