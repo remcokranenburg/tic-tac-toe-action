@@ -28,16 +28,18 @@ async function run() {
       let response = "";
 
       const octokit = github.getOctokit(token);
-      const comments = await octokit.request(
+      const commentsRequest = await octokit.request(
           "GET /repos/{owner}/{repo}/issues/{issue_number}/comments", {
             owner: owner,
             repo: repo,
             issue_number: issueNumber,
           });
 
-      console.log("Comments:")
-      console.log(comments);
+      if(commentsRequest.status != 200) {
+        throw new Error("Could not retrieve comments");
+      }
 
+      const comments = commentsRequest.data;
       const moves = comments.filter((c) => c.body.match(MOVE_COMMENT_PATTERN));
 
       // reconstruct game session
