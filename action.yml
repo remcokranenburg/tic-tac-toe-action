@@ -5,6 +5,7 @@ inputs:
     description: Token
     required: true
 runs:
-  using: 'node14'
-  main: 'dist/index.js'
+  using: 'docker'
+  image: 'docker://node:lts-alpine'
+  entrypoint: 'node dist/index.js'
 
