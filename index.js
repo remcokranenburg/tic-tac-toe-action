@@ -35,6 +35,9 @@ async function run() {
             issue_number: issueNumber,
           });
 
+      console.log("Comments:")
+      console.log(comments);
+
       const moves = comments.filter((c) => c.body.match(MOVE_COMMENT_PATTERN));
 
       // reconstruct game session
