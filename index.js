@@ -18,9 +18,6 @@ async function run() {
   try {
     const token = core.getInput("token");
 
-    console.log("Payload:");
-    console.log(JSON.stringify(github.context.payload, null, 2));
-
     const payload = github.context.payload;
     const body = payload.comment.body;
     const owner = payload.repository.owner.login;
@@ -37,6 +34,10 @@ async function run() {
             repo: repo,
             issue_number: issueNumber,
           });
+
+      console.log("Comments:")
+      console.log(comments);
+
       const moves = comments.filter((c) => c.body.match(MOVE_COMMENT_PATTERN));
 
       // reconstruct game session
