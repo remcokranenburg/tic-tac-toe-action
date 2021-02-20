@@ -6,6 +6,17 @@ function transpose(table) {
   return table[0].map((_, i) => table.map((row) => row[i]));
 }
 
+function moveToStr(column, row) {
+  return String.fromCodePoint("A".codePointAt() + column) +
+      String.fromCodePoint("1".codePointAt() + (2 - row));
+}
+
+function strToMove(str) {
+    const column = str[0].codePointAt() - "A".codePointAt();
+    const row = 2 - (str[1].codePointAt() - "1".codePointAt());
+    return [column, row];
+}
+
 export class Game {
   constructor() {
     this.board = [
@@ -27,8 +38,7 @@ export class Game {
     while(true) {
       const column = Math.floor(Math.random() * 3);
       const row = Math.floor(Math.random() * 3);
-      const moveStr = String.fromCodePoint("A".codePointAt() + column) +
-            String.fromCodePoint("1".codePointAt() + row);
+      const moveStr = moveToStr(column, row);
 
       if(this.board[row][column] === null) {
         return moveStr;
@@ -41,9 +51,8 @@ export class Game {
    * number. The letter denotes the column of the move, while the letter
    * denotes the row. A1 is the bottom left corner and C3 the top right.
    */
-  makeMove(move) {
-    const column = move[0].codePointAt() - "A".codePointAt();
-    const row = 2 - (move[1].codePointAt() - "1".codePointAt());
+  makeMove(moveStr) {
+    const [column, row] = strToMove(moveStr);
 
     if(this.isGameOver()) {
       throw new Error("Game over");
