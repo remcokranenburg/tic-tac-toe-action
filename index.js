@@ -70,8 +70,12 @@ async function run() {
       }
 
       if(game.isGameOver()) {
-        const winner = game.numMoves() % 2 == 0 ? "O" : "X";
-        await poster.post(`Game over, ${winner} won!`);
+        if(game.hasWinner()) {
+          const winner = game.numMoves() % 2 == 0 ? "O" : "X";
+          await poster.post(`Game over, ${winner} won!`);
+        } else {
+          await poster.post(`Game over, draw!`);
+        }
       }
 
       await poster.post("```\n" + game.toString() + "\n```");
