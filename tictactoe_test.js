@@ -25,5 +25,20 @@ function test_make_move() {
   assert.deepEqual(game.board, expectedBoard);
 }
 
+function test_draw() {
+  const game = new Game();
+  game.makeMove("A1");
+  game.makeMove("B2");
+  game.makeMove("A2");
+  game.makeMove("A3");
+  game.makeMove("C1");
+  game.makeMove("B1");
+  game.makeMove("B3");
+  game.makeMove("C2");
+  game.makeMove("C3");
+  assert.equal(game.isGameOver(), true);
+}
+
 test_empty();
 test_make_move();
+test_draw();

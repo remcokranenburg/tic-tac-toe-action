@@ -82,12 +82,21 @@ export class Game {
   }
 
   /**
-   * Returns whether the game is over. If any row, column or diagonal is filled
-   * with the same pieces, the game is won by that player. When the game is
-   * over, an even number of moves means that O won, while an odd number of
-   * moves means that X won.
+   * Returns whether the game is over. The game is over when there is a winner
+   * or if the board is full.
    */
   isGameOver() {
+    const isFull = !this.board.some((row) => row.some((c) => c === null));
+    return this.hasWinner() || isFull;
+  }
+
+  /**
+   * Returns whether the game has a winner. If any row, column or diagonal is
+   * filled with the same pieces, the game is won by that player. When there is
+   * a winner, an even number of moves means that O won, while an odd number of
+   * moves means that X won.
+   */
+  hasWinner() {
     const rows = this.board.some(rowSame);
     const columns = transpose(this.board).some(rowSame);
     const diagonals = (
