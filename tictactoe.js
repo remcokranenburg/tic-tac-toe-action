@@ -17,7 +17,7 @@ function strToMove(str) {
   return [column, row];
 }
 
-class Game {
+export class Game {
   constructor(game) {
     this.board = [
       [null, null, null],
