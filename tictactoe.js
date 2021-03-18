@@ -12,37 +12,95 @@ function moveToStr(column, row) {
 }
 
 function strToMove(str) {
-    const column = str[0].codePointAt() - "A".codePointAt();
-    const row = 2 - (str[1].codePointAt() - "1".codePointAt());
-    return [column, row];
+  const column = str[0].codePointAt() - "A".codePointAt();
+  const row = 2 - (str[1].codePointAt() - "1".codePointAt());
+  return [column, row];
 }
 
-export class Game {
-  constructor() {
+class Game {
+  constructor(game) {
     this.board = [
       [null, null, null],
       [null, null, null],
       [null, null, null],
     ];
+
+    if(game !== undefined) {
+      for(let i = 0; i < this.board.length; i++) {
+        for(let j = 0; j < this.board[i].length; j++) {
+          this.board[i][j] = game.board[i][j];
+        }
+      }
+    }
+  }
+
+  findPossibleMoves() {
+    const possibleMoves = [];
+
+    for(let i = 0; i < this.board.length; i++) {
+      for(let j = 0; j < this.board[i].length; j++) {
+        if(this.board[i][j] == null) {
+          possibleMoves.push(moveToStr(j, i));
+        }
+      }
+    }
+
+    return possibleMoves;
+  }
+
+  scorePossibleMoves(depth) {
+    const scoredMoves = [];
+
+    for(const move of this.findPossibleMoves()) {
+      const next = new Game(this);
+      next.makeMove(move);
+
+      let score = 0;
+
+      if(next.isGameOver()) {
+        if(next.hasWinner()) {
+          if(this.isTurnOfX()) {
+            score = 10 - depth;
+          } else {
+            score = -10 + depth;
+          }
+        } else {
+          score = 0;
+        }
+      } else {
+        const nextScores = next.scorePossibleMoves(depth + 1);
+
+        // next player will move against this player: if current is X, next
+        // will minimize score and if current is O, next will maximize score
+        if(this.isTurnOfX()) {
+          score = nextScores[0].score;
+        } else {
+          score = nextScores[nextScores.length - 1].score;
+        }
+      }
+
+      scoredMoves.push({ move: move, score: score });
+    }
+
+    scoredMoves.sort((a, b) => a.score < b.score ? -1 : 1);
+
+    return scoredMoves;
   }
 
   /**
    * Given the current board, calculate the best move for the current player.
-   * Note: this placeholder implementation does random valid moves
    */
   calculateBestMove() {
     if(this.isGameOver()) {
       throw new Error("Game over");
     }
 
-    while(true) {
-      const column = Math.floor(Math.random() * 3);
-      const row = Math.floor(Math.random() * 3);
-      const moveStr = moveToStr(column, row);
+    const moveScores = this.scorePossibleMoves(0);
 
-      if(this.board[row][column] === null) {
-        return moveStr;
-      }
+    if(this.isTurnOfX()) {
+      return moveScores[moveScores.length - 1].move;
+    } else {
+      return moveScores[0].move;
     }
   }
 
@@ -88,6 +146,13 @@ export class Game {
   isGameOver() {
     const isFull = !this.board.some((row) => row.some((c) => c === null));
     return this.hasWinner() || isFull;
+  }
+
+  /**
+   * Returns whether X should make a move
+   */
+  isTurnOfX() {
+    return this.numMoves() % 2 == 0;
   }
 
   /**
