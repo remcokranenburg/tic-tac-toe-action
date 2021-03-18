@@ -1,4 +1,4 @@
-name: Tic Tac Toe
+name: Tic Tac Toe Action
 description: Let's play some Tic Tac Toe :D
 inputs:
   token:
